@@ -1,0 +1,61 @@
+{
+	"name": "idle-heroes-wiki",
+	"version": "1.0.0",
+	"description": "Idle Heroes Wiki from NextJS",
+	"author": "Shary",
+	"private": true,
+	"homepage": "/",
+	"main": "main.js",
+	"build": {
+		"appId": "com.shary.idle-heroes-wiki",
+		"productName": "Idle Heroes Wiki",
+		"artifactName": "com.shary.idle-heroes-wiki",
+		"copyright": "Copyright © 2024 Idle Heroes Wiki",
+		"electronVersion": "30.0.1",
+		"asar": true,
+		"directories": {
+			"output": "electron",
+			"buildResources": "./"
+		},
+		"files": [
+			"!*.js.map",
+			"!*.css.map"
+		],
+		"win": {
+			"icon": "favicon.ico",
+			"target": [
+				"nsis"
+			]
+		},
+		"nsis": {
+			"allowToChangeInstallationDirectory": true,
+			"oneClick": false,
+			"menuCategory": true,
+			"allowElevation": false,
+			"perMachine": false,
+			"runAfterFinish": false,
+			"deleteAppDataOnUninstall": true,
+			"guid": "idle-heroes-wiki"
+		},
+		"linux": {
+			"icon": "favicon.ico",
+			"category": "Utility",
+			"target": [
+				{
+					"target": "pacman"
+				}
+			]
+		},
+		"mac": {
+			"icon": "favicon.ico",
+			"type": "development",
+			"category": "public.app-category.developer-tools",
+			"target": [
+				"dmg"
+			]
+		}
+	},
+	"dependencies": {
+		"electron-serve": "^1.3.0"
+	}
+}
