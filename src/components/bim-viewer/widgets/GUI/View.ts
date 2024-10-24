@@ -6,6 +6,8 @@ import { BimViewer } from '../../core/Viewer'
 import { BimHelperVignetteBackground } from '../../helpers/Vignette/Background'
 import { extend } from '../../utils/extend'
 
+import './gui.css'
+
 class BimWidgetGUIView extends BimRender {
 	static Options: BimWidgetGUIViewOptions = {
 		// domElement: undefined,
@@ -52,7 +54,7 @@ class BimWidgetGUIView extends BimRender {
 
 		const { domElement, visibility, kiosk, ...guiParams } = this.options
 		const { GUI } = require('dat.gui')
-		const gui = new GUI(guiParams)
+		const gui: GUI = new GUI(guiParams)
 
 		const bim = this.bimViewer
 		const opts = bim.options
@@ -91,8 +93,12 @@ class BimWidgetGUIView extends BimRender {
 		//#region Textures
 		const texturesFolder = gui.addFolder('Textures')
 		texturesFolder.add(state, 'exposure', 0, 2).onChange(() => bim.updateLights('exposure', state.exposure))
-		texturesFolder.add(state, 'textureColorSpace', ['sRGB', 'Linear']).onChange(() => bim.updateTexturesColorSpace(state.textureColorSpace))
-		texturesFolder.add(state, 'outputColorSpace', ['sRGB', 'Linear']).onChange(() => bim.updateOutputColorSpace(state.outputColorSpace))
+		texturesFolder
+			.add(state, 'textureColorSpace', ['sRGB', 'Linear'])
+			.onChange(() => bim.updateTexturesColorSpace(state.textureColorSpace))
+		texturesFolder
+			.add(state, 'outputColorSpace', ['sRGB', 'Linear'])
+			.onChange(() => bim.updateOutputColorSpace(state.outputColorSpace))
 		//#endregion Textures
 
 		//#region Environments
@@ -114,15 +120,18 @@ class BimWidgetGUIView extends BimRender {
 		const lightingFolder = gui.addFolder('Lights')
 		lightingFolder.add(state, 'addLights').onChange(() => bim.updateLights('addLights', state.addLights))
 		lightingFolder.addColor(opts, 'ambientColor').onChange(() => bim.updateLights('ambientColor', opts.ambientColor))
-		lightingFolder.add(opts, 'ambientIntensity', 0, 2).onChange(() => bim.updateLights('ambientIntensity', opts.ambientIntensity))
+		lightingFolder
+			.add(opts, 'ambientIntensity', 0, 2)
+			.onChange(() => bim.updateLights('ambientIntensity', opts.ambientIntensity))
 		lightingFolder.addColor(opts, 'directColor').onChange(() => bim.updateLights('directColor', opts.directColor))
-		lightingFolder.add(opts, 'directIntensity', 0, 4).onChange(() => bim.updateLights('directIntensity', opts.directIntensity))
+		lightingFolder
+			.add(opts, 'directIntensity', 0, 4)
+			.onChange(() => bim.updateLights('directIntensity', opts.directIntensity))
 		//#endregion Lights
 
 		//#region Animations
 		this.animationsFolder = gui.addFolder('Animations')
 		this.animationsFolder.domElement.style.display = 'none'
-
 		//#endregion Animations
 
 		//#region Morph Targets
@@ -136,15 +145,15 @@ class BimWidgetGUIView extends BimRender {
 		//#endregion Cameras
 
 		//#region Performance
-		this.stats = new Stats()
-		this.stats.dom.style.cssText = 'position:static;height:48px'
+		const stats = new Stats()
 		const performanceFolder = gui.addFolder('Performance')
 		const performmanceLi = document.createElement('li')
-		performmanceLi.appendChild(this.stats.dom)
+		performmanceLi.appendChild(stats.dom)
 		performmanceLi.id = 'bim-gui-stats'
 		// @ts-ignore
 		performanceFolder.__ul.appendChild(performmanceLi)
 		performanceFolder.open()
+		this.stats = stats
 		//#endregion Performance
 
 		//#region Push DOM
@@ -153,9 +162,9 @@ class BimWidgetGUIView extends BimRender {
 		this.domElement.appendChild(gui.domElement)
 		bim.domElement?.appendChild(this.domElement)
 		kiosk && gui.close()
+		this.gui = gui
 		//#endregion Push DOM
 
-		this.gui = gui
 		this.state = state
 		this.actionStates = {}
 	}
@@ -222,7 +231,9 @@ class BimWidgetGUIView extends BimRender {
 			this.animationsFolder.hide()
 		} else {
 			this.animCtrls.push(
-				this.animationsFolder.add(this.state, 'playbackSpeed', 0, 1).onChange(() => bim.updatePlaybackSpeed(this.state.playbackSpeed))
+				this.animationsFolder
+					.add(this.state, 'playbackSpeed', 0, 1)
+					.onChange(() => bim.updatePlaybackSpeed(this.state.playbackSpeed))
 			)
 			this.animCtrls.push(this.animationsFolder.add({ playAll: () => bim.playAllClips() }, 'playAll'))
 
@@ -278,3 +289,4 @@ export interface BimWidgetGUIViewOptions extends GUIParams {
 }
 
 export { BimWidgetGUIView }
+

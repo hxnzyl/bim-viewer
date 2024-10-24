@@ -8,14 +8,8 @@ import LayoutDefault from '@/components/layout/default'
 import { AppContext, Theme, themes } from '@/context/app'
 
 import { cn } from '@/lib/utils'
-import { Inter as FontSans } from 'next/font/google'
 
 import localStorage from '@/lib/localStorage'
-
-const fontSans = FontSans({
-	subsets: ['latin'],
-	variable: '--font-sans'
-})
 
 const defaultTheme: Theme = JSON.parse(localStorage.getItem('theme') || 'null') || themes[0]
 
@@ -41,13 +35,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head />
-			<body
-				className={cn(
-					`min-h-screen bg-background font-sans antialiased`,
-					initializeRenderCompleted && theme.code,
-					fontSans.variable
-				)}
-			>
+			<body className={cn(`min-h-screen bg-background font-sans antialiased`, initializeRenderCompleted && theme.code)}>
 				<AppContext.Provider value={{ theme, setTheme: onSelectTheme }}>
 					{initializeRenderCompleted && <LayoutDefault>{children}</LayoutDefault>}
 				</AppContext.Provider>

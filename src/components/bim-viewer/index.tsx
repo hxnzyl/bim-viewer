@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { BimViewer, BimViewerOptions } from './core/Viewer'
+import { useEffect } from 'react';
+import { BimViewer, BimViewerOptions } from './core/Viewer';
 
 export default function BimViewerComponent(props: { url: string; options: BimViewerOptions }) {
 	useEffect(() => {

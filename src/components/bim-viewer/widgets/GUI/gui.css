@@ -1,0 +1,21 @@
+#bim-gui {
+    /* gui放左上角 */
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+
+#bim-gui #bim-gui-stats div {
+	/* stats在gui文件夹中 */
+	position: static !important;
+}
+
+#bim-gui #bim-gui-stats {
+	/* stats在gui中时高度自适应 */
+	height: max-content;
+}
+
+#bim-gui .closed #bim-gui-stats {
+	/* stats在gui中隐藏时高度为0 */
+	height: 0;
+}

@@ -9,7 +9,10 @@ export default function ThemeSelect() {
 	const { theme, setTheme } = useContext(AppContext)
 
 	return (
-		<div className="absolute left-5 top-5 cursor-pointer" onClick={() => setTheme(themes[theme.code === 'dark' ? 0 : 1])}>
+		<div
+			className="absolute right-5 bottom-5 cursor-pointer"
+			onClick={() => setTheme(themes[theme.code === 'dark' ? 0 : 1])}
+		>
 			{<LucideIcon name={theme.code === 'dark' ? 'sun' : 'moon'} />}
 		</div>
 	)

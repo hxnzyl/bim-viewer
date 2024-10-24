@@ -7,6 +7,7 @@ import { BimHelperLineAxes } from '@/components/bim-viewer/helpers/Line/Axes'
 import { BimHelperLineGrid } from '@/components/bim-viewer/helpers/Line/Grid'
 import { BimHelperVignetteBackground } from '@/components/bim-viewer/helpers/Vignette/Background'
 import { BimWidgetCubeView } from '@/components/bim-viewer/widgets/Cube/View'
+import { BimWidgetGUIView } from '@/components/bim-viewer/widgets/GUI/View'
 
 export default function HomePage() {
 	const options: BimViewerOptions = {
@@ -20,9 +21,9 @@ export default function HomePage() {
 		],
 		widgets: [
 			// Revit ViewCube
-			new BimWidgetCubeView()
+			new BimWidgetCubeView(),
 			// GUI
-			// new BimWidgetGUIView()
+			new BimWidgetGUIView()
 		],
 		effects: [
 			//选中效果器-泛光
