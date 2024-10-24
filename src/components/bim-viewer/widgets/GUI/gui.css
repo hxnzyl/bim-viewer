@@ -1,8 +1,17 @@
 #bim-gui {
-    /* gui放左上角 */
+	/* gui放左上角 */
 	position: fixed;
 	top: 0;
 	left: 0;
+}
+
+#bim-gui input {
+	margin: 0;
+	padding: 0 3px;
+}
+
+#bim-gui select {
+	color: #222;
 }
 
 #bim-gui #bim-gui-stats div {

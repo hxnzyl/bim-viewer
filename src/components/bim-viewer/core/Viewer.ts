@@ -1,4 +1,4 @@
-import { Easing, Tween } from '@tweenjs/tween.js'
+import { EventListenerQueue } from 'events-ns'
 import {
     AmbientLight,
     AnimationClip,
@@ -6,7 +6,7 @@ import {
     Box3,
     Cache,
     Camera,
-    ColorRepresentation,
+    Color,
     DirectionalLight,
     EventDispatcher,
     Group,
@@ -32,13 +32,13 @@ import {
     SkeletonHelper,
     SkinnedMesh,
     Texture,
-    UnsignedByteType,
     Vector2,
     Vector3,
     WebGLRenderer
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module'
+import { Easing, Tween } from 'three/examples/jsm/libs/tween.module'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader'
@@ -46,16 +46,15 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
 import { Environment, Environments } from '../config/Environments'
 import { BimHelperVignetteBackground } from '../helpers/Vignette/Background'
+import { DataAnyObject, NumberObject } from '../types'
 import { assertUrl } from '../utils/detect'
 import { extend } from '../utils/extend'
 import { materialToArray } from '../utils/three'
 import { BimRender, BimRenders } from './Render'
 
-import { EventListenerQueue } from 'events-ns'
-
 Cache.enabled = true
 
-class BimViewer extends EventDispatcher<{ [key: string]: { data: any } }> {
+class BimViewer extends EventDispatcher<DataAnyObject> {
 	static Options: BimViewerOptions = {
 		// domElement: undefined,
 		visibility: 'hidden',
@@ -102,7 +101,7 @@ class BimViewer extends EventDispatcher<{ [key: string]: { data: any } }> {
 	object?: Group<Object3DEventMap>
 	objectCenter!: Vector3
 	mixer?: AnimationMixer
-	tween?: Tween
+	tween?: Tween<NumberObject>
 
 	renderTimer: number = 0
 	clientWidth: number = 0
@@ -328,9 +327,9 @@ class BimViewer extends EventDispatcher<{ [key: string]: { data: any } }> {
 			else if (node instanceof Mesh) {
 				const mesh = node as Mesh
 				this.meshes.push(mesh)
+
 				// 网格材料
-				const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
-				materials.forEach((material: Material) => {
+				materialToArray(mesh.material).forEach((material: Material) => {
 					// TODO(https://github.com/mrdoob/three.js/pull/18235): Clean up.
 					material.depthWrite = !material.transparent
 					// 放射光颜色与放射光贴图 不设置可能导致黑模
@@ -341,10 +340,12 @@ class BimViewer extends EventDispatcher<{ [key: string]: { data: any } }> {
 					}
 					this.materials.push(material)
 				})
+
 				// 变形动画
 				if (mesh.morphTargetInfluences) {
 					this.morphs.push(mesh)
 				}
+
 				// 骨骼
 				if (mesh instanceof SkinnedMesh) {
 					this.skeletons.push(mesh.skeleton)
@@ -596,12 +597,12 @@ class BimViewer extends EventDispatcher<{ [key: string]: { data: any } }> {
 		}
 	}
 
-	updateBackground(color1: ColorRepresentation, color2: ColorRepresentation) {
+	updateBackground(color1: string | number, color2: string | number) {
 		const backgroundHelper = this.helpers.VignetteBackground as BimHelperVignetteBackground
 		if (backgroundHelper) {
 			backgroundHelper.update({
-				color1,
-				color2
+				color1: new Color(color1),
+				color2: new Color(color2)
 			})
 		}
 	}
@@ -618,22 +619,20 @@ class BimViewer extends EventDispatcher<{ [key: string]: { data: any } }> {
 		const { path } = environment,
 			resolve = (envMap: Texture | null) => {
 				const backgroundHelper = this.helpers.VignetteBackground
-				if (backgroundHelper) {
-					if (!envMap || !background) {
-						backgroundHelper.show()
-					} else {
-						backgroundHelper.hide()
-					}
-				}
+                // 隐藏背景
+				if (backgroundHelper) !envMap && background ? backgroundHelper.show() : backgroundHelper.hide()
+                // 设置背景
 				this.scene.background = background ? envMap : null
+                // 设置环境
 				this.scene.environment = envMap
 			}
 		if (path) {
-			new RGBELoader().setDataType(UnsignedByteType).load(path, (texture) => {
+			new RGBELoader().load(path, (texture) => {
 				const pmremGenerator = new PMREMGenerator(this.renderer)
 				pmremGenerator.compileEquirectangularShader()
 				const envMap = pmremGenerator.fromEquirectangular(texture).texture
 				pmremGenerator.dispose()
+				texture.dispose()
 				resolve(envMap)
 			})
 		} else {
@@ -786,7 +785,18 @@ class BimViewer extends EventDispatcher<{ [key: string]: { data: any } }> {
 	//#region Display
 	updateWireframe(wireframe: boolean) {
 		this.materials.forEach((material) => {
-			if (material instanceof MeshBasicMaterial || material instanceof MeshLambertMaterial) {
+			if (
+				// 显示基本材质的线框
+				material instanceof MeshBasicMaterial ||
+				// 显示基于光照的线框效果
+				material instanceof MeshLambertMaterial ||
+				// 适用于具有高光和反射的材质，支持线框显示
+				material instanceof MeshPhongMaterial ||
+				// 现代材质，支持物理渲染，也可以使用线框显示
+				material instanceof MeshStandardMaterial ||
+				// 与 MeshStandardMaterial 类似，但提供更多的物理特性，也支持线框显示
+				material instanceof MeshPhysicalMaterial
+			) {
 				material.wireframe = wireframe
 			}
 		})
@@ -826,7 +836,10 @@ class BimViewer extends EventDispatcher<{ [key: string]: { data: any } }> {
 		})
 	}
 
-	updateTextureColorSpace(material: MeshHasMapMaterial, colorSpace: string) {
+	updateTextureColorSpace(
+		material: MeshLambertMaterial | MeshPhongMaterial | MeshStandardMaterial | MeshPhysicalMaterial,
+		colorSpace: string
+	) {
 		if (material.map) {
 			material.map.colorSpace = colorSpace === 'sRGB' ? SRGBColorSpace : LinearSRGBColorSpace
 		}
@@ -844,8 +857,6 @@ class BimViewer extends EventDispatcher<{ [key: string]: { data: any } }> {
 	}
 	//#endregion Display
 }
-
-type MeshHasMapMaterial = MeshLambertMaterial | MeshPhongMaterial | MeshStandardMaterial | MeshPhysicalMaterial
 
 export interface BimViewerOptions {
 	domElement?: HTMLElement

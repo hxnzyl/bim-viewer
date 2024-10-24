@@ -3,7 +3,15 @@
  * @License MIT
  */
 
-import { Color, ColorRepresentation, DoubleSide, IUniform, Mesh, PlaneGeometry, RawShaderMaterial, Vector2 } from 'three'
+import {
+    Color,
+    DoubleSide,
+    IUniform,
+    Mesh,
+    PlaneGeometry,
+    RawShaderMaterial,
+    Vector2
+} from 'three'
 import { isIOS } from '../../utils/detect'
 import { extend } from '../../utils/extend'
 
@@ -119,8 +127,8 @@ class BimHelperVignetteBackground extends BimRender {
 }
 
 export type BimHelperVignetteBackgroundUniforms = {
-	color1: ColorRepresentation
-	color2: ColorRepresentation
+	color1: Color
+	color2: Color
 	smooth?: Vector2
 	offset?: Vector2
 	scale?: Vector2
@@ -136,3 +144,4 @@ export interface BimHelperVignetteBackgroundOptions extends BimHelperVignetteBac
 }
 
 export { BimHelperVignetteBackground }
+

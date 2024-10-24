@@ -64,15 +64,15 @@ class BimWidgetGUIView extends BimRender {
 			wireframe: false,
 			skeleton: !!bim.helpers.skeletonHelpers,
 			grid: !!bim.helpers.LineGrid,
-			autoRotate: bim.controls?.autoRotate,
-			screenSpacePanning: bim.controls?.screenSpacePanning,
+			autoRotate: bim.controls.autoRotate,
+			screenSpacePanning: bim.controls.screenSpacePanning,
 			textureColorSpace: 'sRGB',
 			outputColorSpace: 'sRGB',
-			exposure: bim.renderer?.toneMappingExposure || 1,
-			background: false,
+			exposure: bim.renderer.toneMappingExposure || 1,
 			environment: bim.environment?.name || 'None',
-			backgroundColor1: (bgh && bgh.options.color1) || '#ffffff',
-			backgroundColor2: (bgh && bgh.options.color2) || '#ffffff',
+			background: !!bgh,
+			color1: bgh && bgh.options.color1.getHex(),
+			color2: bgh && bgh.options.color2.getHex(),
 			addLights: bim.lights.length > 0,
 			playbackSpeed: 1.0
 		}
@@ -108,12 +108,8 @@ class BimWidgetGUIView extends BimRender {
 		environmentsFolder
 			.add(state, 'environment', environmentNames)
 			.onChange(() => bim.updateEnvironment(state.environment, state.background))
-		environmentsFolder
-			.addColor(state, 'backgroundColor1')
-			.onChange(() => bim.updateBackground(state.backgroundColor1, state.backgroundColor2))
-		environmentsFolder
-			.addColor(state, 'backgroundColor2')
-			.onChange(() => bim.updateBackground(state.backgroundColor1, state.backgroundColor2))
+		environmentsFolder.addColor(state, 'color1').onChange(() => bim.updateBackground(state.color1, state.color2))
+		environmentsFolder.addColor(state, 'color2').onChange(() => bim.updateBackground(state.color1, state.color2))
 		//#endregion Environments
 
 		//#region Lights
@@ -247,11 +243,11 @@ class BimWidgetGUIView extends BimRender {
 				let action = clipIndex === 0 ? mixer?.clipAction(clip).play() : null
 				// Play other clips when enabled.
 				this.animCtrls.push(
-					this.animationsFolder!.add(this.actionStates, clip.name)
+					this.animationsFolder
+						.add(this.actionStates, clip.name)
 						.listen()
 						.onChange((playAnimation) => {
-							action = action || mixer?.clipAction(clip)
-							if (action) {
+							if ((action = action || mixer?.clipAction(clip))) {
 								action.setEffectiveTimeScale(1)
 								playAnimation ? action.play() : action.stop()
 							}
