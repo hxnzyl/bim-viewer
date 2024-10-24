@@ -4,12 +4,24 @@ export type DeepRequired<T> = T extends object
 	  } & {}
 	: T
 
-export interface NumberObject {
-	[key: string]: number
+export interface AnyObject<T = string> {
+	[key: T]: any
 }
 
-export interface DataAnyObject {
-	[key: string]: {
+export interface StringObject<T = string> {
+	[key: T]: string
+}
+
+export interface NumberObject<T = string> {
+	[key: T]: number
+}
+
+export interface BooleanObject<T = string> {
+	[key: T]: boolean
+}
+
+export interface DataAnyObject<T = string> {
+	[key: T]: {
 		data: any
 	}
 }

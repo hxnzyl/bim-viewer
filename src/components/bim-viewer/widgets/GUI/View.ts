@@ -4,8 +4,8 @@ import { Environments } from '../../config/Environments'
 import { BimRender } from '../../core/Render'
 import { BimViewer } from '../../core/Viewer'
 import { BimHelperVignetteBackground } from '../../helpers/Vignette/Background'
+import { AnyObject, BooleanObject } from '../../types'
 import { extend } from '../../utils/extend'
-
 import './gui.css'
 
 class BimWidgetGUIView extends BimRender {
@@ -18,8 +18,8 @@ class BimWidgetGUIView extends BimRender {
 
 	name = 'GUIView'
 	options = {} as Required<BimWidgetGUIViewOptions>
-	state: { [key: string]: any } = {}
-	actionStates: { [key: string]: boolean } = {}
+	state: AnyObject = {}
+	actionStates: BooleanObject = {}
 	animCtrls: GUIController<object>[] = []
 	morphCtrls: GUIController<object>[] = []
 

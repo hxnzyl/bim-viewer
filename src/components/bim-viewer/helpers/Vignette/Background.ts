@@ -3,27 +3,19 @@
  * @License MIT
  */
 
-import {
-    Color,
-    DoubleSide,
-    IUniform,
-    Mesh,
-    PlaneGeometry,
-    RawShaderMaterial,
-    Vector2
-} from 'three'
-import { isIOS } from '../../utils/detect'
-import { extend } from '../../utils/extend'
-
+import { Color, DoubleSide, IUniform, Mesh, PlaneGeometry, RawShaderMaterial, Vector2 } from 'three'
 import { BimRender } from '../../core/Render'
 import { BimViewer } from '../../core/Viewer'
+import { StringObject } from '../../types'
+import { isIOS } from '../../utils/detect'
+import { extend } from '../../utils/extend'
 // @ts-ignore
 import frag from './shader.frag'
 // @ts-ignore
 import vert from './shader.vert'
 
 class BimHelperVignetteBackground extends BimRender {
-	static Uniforms: { [key in keyof BimHelperVignetteBackgroundUniforms]: string } = {
+	static Uniforms: StringObject<keyof BimHelperVignetteBackgroundUniforms> = {
 		color1: 'c',
 		color2: 'c',
 		smooth: 'v2',
