@@ -1,41 +1,41 @@
 import { Easing, Tween } from '@tweenjs/tween.js'
 import {
-	AmbientLight,
-	AnimationClip,
-	AnimationMixer,
-	Box3,
-	Cache,
-	Camera,
-	ColorRepresentation,
-	DirectionalLight,
-	EventDispatcher,
-	Group,
-	Light,
-	LineBasicMaterial,
-	LinearSRGBColorSpace,
-	LoadingManager,
-	Material,
-	Mesh,
-	MeshBasicMaterial,
-	MeshLambertMaterial,
-	MeshPhongMaterial,
-	MeshPhysicalMaterial,
-	MeshStandardMaterial,
-	Object3D,
-	Object3DEventMap,
-	PMREMGenerator,
-	PerspectiveCamera,
-	Raycaster,
-	SRGBColorSpace,
-	Scene,
-	Skeleton,
-	SkeletonHelper,
-	SkinnedMesh,
-	Texture,
-	UnsignedByteType,
-	Vector2,
-	Vector3,
-	WebGLRenderer
+    AmbientLight,
+    AnimationClip,
+    AnimationMixer,
+    Box3,
+    Cache,
+    Camera,
+    ColorRepresentation,
+    DirectionalLight,
+    EventDispatcher,
+    Group,
+    Light,
+    LineBasicMaterial,
+    LinearSRGBColorSpace,
+    LoadingManager,
+    Material,
+    Mesh,
+    MeshBasicMaterial,
+    MeshLambertMaterial,
+    MeshPhongMaterial,
+    MeshPhysicalMaterial,
+    MeshStandardMaterial,
+    Object3D,
+    Object3DEventMap,
+    PMREMGenerator,
+    PerspectiveCamera,
+    Raycaster,
+    SRGBColorSpace,
+    Scene,
+    Skeleton,
+    SkeletonHelper,
+    SkinnedMesh,
+    Texture,
+    UnsignedByteType,
+    Vector2,
+    Vector3,
+    WebGLRenderer
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module'
@@ -196,7 +196,9 @@ class BimViewer extends EventDispatcher<{ [key: string]: { data: any } }> {
 
 	onMousemove(event: MouseEvent) {
 		this.unlockRender()
-		this.updateRaycaster(new Vector2((event.clientX / this.clientWidth) * 2 - 1, -(event.clientY / this.clientHeight) * 2 + 1))
+		this.updateRaycaster(
+			new Vector2((event.clientX / this.clientWidth) * 2 - 1, -(event.clientY / this.clientHeight) * 2 + 1)
+		)
 	}
 	//#endregion Event
 
@@ -512,6 +514,10 @@ class BimViewer extends EventDispatcher<{ [key: string]: { data: any } }> {
 		const aspect = this.clientWidth / this.clientHeight
 		this.camera = new PerspectiveCamera(fov, aspect, near, far)
 		this.scene.add(this.camera)
+	}
+
+	updateCamera(name: string) {
+		// @TODO
 	}
 
 	setRaycaster() {
@@ -872,3 +878,4 @@ export interface BimViewerOptions {
 }
 
 export { BimViewer }
+

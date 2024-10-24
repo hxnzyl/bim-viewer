@@ -186,13 +186,14 @@ class BimWidgetGUIView extends BimRender {
 	updateCamerasFolder() {
 		if (this.cameraCtrl) this.cameraCtrl.remove()
 
-		const { cameras } = this.bimViewer
+		const bim = this.bimViewer
+		const { cameras } = bim
 		if (cameras.length == 0) {
 			this.camerasFolder?.hide()
 		} else {
 			this.camerasFolder.domElement.style.display = ''
 			this.cameraCtrl = this.camerasFolder.add(this.state, 'camera', ['[default]'].concat(cameras.map((mesh) => mesh.name)))
-			this.cameraCtrl.onChange((name) => this.updateCamera(name))
+			this.cameraCtrl.onChange((name) => bim.updateCamera(name))
 		}
 	}
 

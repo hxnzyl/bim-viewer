@@ -5,7 +5,7 @@ import {
     getBufferAttributeUvFromVector2sArray
 } from '../../utils/three'
 import { BimWidgetCubeMesh } from './Mesh'
-import { BimWidgetCubeViewOptions } from './View'
+import { BimWidgetCubeViewColors } from './View'
 
 class BimWidgetCubeFace extends BimWidgetCubeMesh {
 	length: number
@@ -20,13 +20,13 @@ class BimWidgetCubeFace extends BimWidgetCubeMesh {
 		indices: number[],
 		componentId: string,
 		texture: Texture,
-		colors: BimWidgetCubeViewOptions['colors']
+		colors: BimWidgetCubeViewColors
 	) {
 		super()
 		this.length = 60
 		this.vertices = vertices
 		this.indices = indices
-		this.colors = colors
+		this.colors = colors as Required<BimWidgetCubeViewColors>
 		this.componentId = componentId
 		this.texture = texture
 		this.vertexUvs = []

@@ -3,11 +3,11 @@ import { BimWidgetCubeCorner } from './Corner'
 import { BimWidgetCubeEdge } from './Edge'
 import { BimWidgetCubeFace } from './Face'
 import { BimWidgetCubeMap } from './Map'
-import { BimWidgetCubeViewOptions } from './View'
+import { BimWidgetCubeViewColors } from './View'
 
 class BimWidgetCubeData {
 	scene: Scene
-	colors: BimWidgetCubeViewOptions['colors']
+	colors: BimWidgetCubeViewColors
 	callback: () => void
 
 	length: number = 100
@@ -20,7 +20,7 @@ class BimWidgetCubeData {
 	faceIds: string[] = []
 	componentList: (BimWidgetCubeFace | BimWidgetCubeEdge | BimWidgetCubeCorner)[] = []
 
-	constructor(s: BimWidgetCubeViewOptions['colors'], c: () => void) {
+	constructor(s: BimWidgetCubeViewColors, c: () => void) {
 		var e = this.length
 		this.vertices.push(new Vector3(-e / 2, -e / 2, e / 2))
 		this.vertices.push(new Vector3(e / 2, -e / 2, e / 2))

@@ -120,21 +120,24 @@ class BimWidgetCubeView extends BimRender {
 	}
 }
 
+export interface BimWidgetCubeViewColors {
+	faceDefaultColor?: ColorRepresentation //#e3e9ec
+	faceDefaultOpacity?: number //透明度
+	wireframeDefaultColor?: ColorRepresentation //#cccccc
+	wireframeDefaultOpacity?: number //透明度
+	faceHighlightColor?: ColorRepresentation //#3399FF
+	faceHighlightOpacity?: number //透明度
+	wireframeHighlightColor?: ColorRepresentation //#3399FF
+	wireframeHighlightOpacity?: number //透明度
+}
+
 export interface BimWidgetCubeViewOptions {
 	domElement?: HTMLElement
 	visibility?: 'hidden' | 'visible'
 	width?: number
 	height?: number
-	colors?: {
-		faceDefaultColor?: ColorRepresentation //#e3e9ec
-		faceDefaultOpacity?: number //透明度
-		wireframeDefaultColor?: ColorRepresentation //#cccccc
-		wireframeDefaultOpacity?: number //透明度
-		faceHighlightColor?: ColorRepresentation //#3399FF
-		faceHighlightOpacity?: number //透明度
-		wireframeHighlightColor?: ColorRepresentation //#3399FF
-		wireframeHighlightOpacity?: number //透明度
-	}
+	colors?: BimWidgetCubeViewColors
 }
 
 export { BimWidgetCubeView }
+

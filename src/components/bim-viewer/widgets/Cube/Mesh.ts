@@ -7,13 +7,13 @@ import {
     getBufferAttributePositionFromVector3sArray,
     vector3sToArray
 } from '../../utils/three'
-import { BimWidgetCubeView } from './View'
+import { BimWidgetCubeViewColors } from './View'
 
 class BimWidgetCubeMesh {
-	colors = BimWidgetCubeView.Options.colors
-	componentId?: string
-	mesh?: Mesh<BufferGeometry, MeshBasicMaterial>
-	wireframeMesh?: Line2
+	colors!: Required<BimWidgetCubeViewColors>
+	mesh!: Mesh<BufferGeometry, MeshBasicMaterial>
+	wireframeMesh!: Line2
+	componentId!: string
 
 	createMesh(vectors: Vector3[]) {
 		const geometry = new BufferGeometry(),
@@ -35,8 +35,8 @@ class BimWidgetCubeMesh {
 		lineGeometry.setPositions(vector3sToArray(vectors))
 
 		const lineMaterial = new LineMaterial({
-			color: this.colors?.wireframeDefaultColor,
-			opacity: this.colors?.wireframeDefaultOpacity,
+			color: this.colors.wireframeDefaultColor,
+			opacity: this.colors.wireframeDefaultOpacity,
 			linewidth: 1
 		})
 		lineMaterial.resolution.set(160, 160)

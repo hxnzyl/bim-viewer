@@ -1,23 +1,23 @@
 import { BufferGeometry, Mesh, MeshBasicMaterial, Vector3 } from 'three'
 import { Line2 } from 'three/examples/jsm/lines/Line2'
 import { BimWidgetCubeMesh } from './Mesh'
-import { BimWidgetCubeViewOptions } from './View'
+import { BimWidgetCubeViewColors } from './View'
 
 class BimWidgetCubeCorner extends BimWidgetCubeMesh {
 	length: number
 	vertex: Vector3
 
-	cornerFace?: Mesh<BufferGeometry, MeshBasicMaterial>
-	cornerWireframe?: Line2
+	cornerFace!: Mesh<BufferGeometry, MeshBasicMaterial>
+	cornerWireframe!: Line2
 
 	cornerVertices: Vector3[] = []
 	faceHighlightOpacity: number = 1
 
-	constructor(vertex: Vector3, componentId: string, colors: BimWidgetCubeViewOptions['colors']) {
+	constructor(vertex: Vector3, componentId: string, colors: BimWidgetCubeViewColors) {
 		super()
 		this.length = 20
 		this.vertex = vertex
-		this.colors = colors
+		this.colors = colors as Required<BimWidgetCubeViewColors>
 		this.componentId = componentId
 		this.build()
 	}
@@ -47,36 +47,36 @@ class BimWidgetCubeCorner extends BimWidgetCubeMesh {
 	}
 
 	highlight() {
-		var wm = this.wireframeMesh!.material
+		var wm = this.wireframeMesh.material
 		wm.color.set(this.colors.wireframeHighlightColor)
 		wm.opacity = this.colors.wireframeHighlightOpacity
-		this.wireframeMesh!.renderOrder = 100
+		this.wireframeMesh.renderOrder = 100
 
-		var mm = this.mesh!.material
+		var mm = this.mesh.material
 		mm.color.set(this.colors.faceHighlightColor)
 		mm.opacity = this.faceHighlightOpacity
 
-		var cm = this.cornerFace!.material
+		var cm = this.cornerFace.material
 		cm.transparent = true
 		cm.color.set(this.colors.faceHighlightColor)
 		cm.opacity = this.colors.faceHighlightOpacity
 
-		var cwm = this.cornerWireframe!.material
+		var cwm = this.cornerWireframe.material
 		cwm.color.set(this.colors.wireframeHighlightColor)
 		cwm.opacity = this.colors.wireframeHighlightOpacity
-		this.cornerWireframe!.visible = true
+		this.cornerWireframe.visible = true
 	}
 
 	cancelHighlight() {
-		var wm = this.wireframeMesh!.material
+		var wm = this.wireframeMesh.material
 		wm.color.set(this.colors.wireframeDefaultColor)
 		wm.opacity = this.colors.wireframeDefaultOpacity
-		this.wireframeMesh!.renderOrder = 0
-		var mm = this.mesh!.material
+		this.wireframeMesh.renderOrder = 0
+		var mm = this.mesh.material
 		mm.color.set(this.colors.faceDefaultColor)
 		mm.opacity = this.colors.faceDefaultOpacity
 		this.transparent(this.cornerFace)
-		this.cornerWireframe!.visible = false
+		this.cornerWireframe.visible = false
 	}
 
 	buildCornerFace() {

@@ -4,7 +4,7 @@ import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry'
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial'
 import { vector3sToArray } from '../../utils/three'
 import { BimWidgetCubeMesh } from './Mesh'
-import { BimWidgetCubeViewOptions } from './View'
+import { BimWidgetCubeViewColors } from './View'
 
 class BimWidgetCubeEdge extends BimWidgetCubeMesh {
 	highlightWidth: number
@@ -13,14 +13,14 @@ class BimWidgetCubeEdge extends BimWidgetCubeMesh {
 	indices: number[]
 	highlightWireframeMesh?: Line2
 
-	constructor(vertices: Vector3[], indices: number[], componentId: string, colors: BimWidgetCubeViewOptions['colors']) {
+	constructor(vertices: Vector3[], indices: number[], componentId: string, colors: BimWidgetCubeViewColors) {
 		super()
 		this.highlightWidth = 3
 		this.width = 15
 		this.vertices = vertices
 		this.indices = indices
 		this.componentId = componentId
-		this.colors = colors
+		this.colors = colors as Required<BimWidgetCubeViewColors>
 		this.build()
 	}
 
